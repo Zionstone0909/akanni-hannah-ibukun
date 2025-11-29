@@ -1,0 +1,23 @@
+# netlify.toml
+
+[build]
+  # The directory where Next.js outputs the build
+  publish = ".next"
+  # Command to build your Next.js project
+  command = "npm run build"
+
+# Redirect all requests to Next.js
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Specify Netlify Functions directory
+[functions]
+  directory = "netlify/functions"
+
+# Optional environment variables (can also be set in Netlify UI)
+[build.environment]
+  NEXT_PUBLIC_SITE_URL = "https://akanni-blog.netlify.app"
+  NODE_ENV = "production"
