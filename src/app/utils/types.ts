@@ -1,110 +1,72 @@
+// File: src/app/utils/types.ts
+
+// --- Core Data Structures ---
+
+/**
+ * Interface for the nested text fields that your Netlify function produces, 
+ * like title, content, and excerpt.
+ */
+export interface TRendered {
+    /** The actual HTML or text content. */
+    rendered: string;
+}
+
+/**
+ * Interface for the simple tag objects used inside the _embedded structure.
+ */
+export interface TTag {
+    /** The display name of the tag (e.g., "Next.js"). */
+    name: string;
+}
+
+
+// --- Relational Data Structure (_embedded) ---
+
+/**
+ * Interface for the minimal embedded data required for tags/keywords.
+ * This structure MUST match the output of your Netlify function's toWordPressShape().
+ */
+export interface TPostEmbedded {
+    /** An array of arrays holding categories (index 0) and tags (index 1). */
+    'wp:term'?: [
+        Array<any>, // Position [0]: Reserved/Categories (can be empty)
+        Array<TTag> // Position [1]: The list of tags
+    ];
+    // Removed complex media/links/meta as they are likely not needed by your app
+}
+
+
+// --- Main Blog Post Type ---
+
+/**
+ * The core type for a Blog Post object (TPost).
+ * This defines the required data shape for both the list page and the single post page.
+ */
 export type TPost = {
-  id: number
-  date: string
-  date_gmt: string
-  guid: Guid
-  modified: string
-  modified_gmt: string
-  slug: string
-  status: string
-  type: string
-  link: string
-  title: Title
-  content: Content
-  excerpt: Excerpt
-  author: number
-  featured_media: number
-  comment_status: string
-  ping_status: string
-  sticky: boolean
-  template: string
-  format: string
-  meta: Meta
-  categories: number[]
-  tags: number[]
-  class_list: string[]
-  _links: Links
-}
+    /** The URL-friendly unique identifier (required for routing). */
+    slug: string;
+    
+    /** The post date in ISO string format (e.g., "2024-10-18T10:00:00Z"). */
+    date: string; 
+    
+    /** The post title (nested). */
+    title: TRendered;
 
-export interface Guid {
-  rendered: string
-}
+    /** The full post content (nested). */
+    content: TRendered;
 
-export interface Title {
-  rendered: string
-}
+    /** The short summary/excerpt (nested). */
+    excerpt: TRendered;
+    
+    /** The optional embedded data, primarily used to extract tags for metadata. */
+    _embedded?: TPostEmbedded; 
+};
 
-export interface Content {
-  rendered: string
-  protected: boolean
-}
 
-export interface Excerpt {
-  rendered: string
-  protected: boolean
-}
+// --- Aliases for Component Use ---
 
-export interface Meta {
-  footnotes: string
-}
-
-export interface Links {
-  self: Self[]
-  collection: Collection[]
-  about: About[]
-  author: Author[]
-  replies: Reply[]
-  "version-history": VersionHistory[]
-  "predecessor-version": PredecessorVersion[]
-  "wp:attachment": WpAttachment[]
-  "wp:term": WpTerm[]
-  curies: Cury[]
-}
-
-export interface Self {
-  href: string
-}
-
-export interface Collection {
-  href: string
-}
-
-export interface About {
-  href: string
-}
-
-export interface Author {
-  embeddable: boolean
-  href: string
-}
-
-export interface Reply {
-  embeddable: boolean
-  href: string
-}
-
-export interface VersionHistory {
-  count: number
-  href: string
-}
-
-export interface PredecessorVersion {
-  id: number
-  href: string
-}
-
-export interface WpAttachment {
-  href: string
-}
-
-export interface WpTerm {
-  taxonomy: string
-  embeddable: boolean
-  href: string
-}
-
-export interface Cury {
-  name: string
-  href: string
-  templated: boolean
-}
+/**
+ * Type alias for the specific post structure expected by the single blog page, 
+ * ensuring compatibility with the rest of your application's types (TLocalPost).
+ */
+export type TLocalPost = TPost;

@@ -1,3 +1,4 @@
+// src/app/components/ArticleContent.tsx - FULLY CORRECT
 export default function ArticleContent({ content }: { content: string }) {
     return (
         <article

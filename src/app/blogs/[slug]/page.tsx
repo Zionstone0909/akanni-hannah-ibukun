@@ -1,103 +1,114 @@
+// src/app/blogs/[slug]/page.tsx
 import BlogContent from "@/app/components/BlogContent";
 import BlogHeader from "@/app/components/BlogHeader";
-import { fetchBlog } from "@/app/utils/fetchWordpress";
-import { createHighlighter } from "shiki";
+import { fetchBlog } from "@/app/utils/fetchNetlify";
+import { createHighlighter, Highlighter } from "shiki";
 import { JSDOM } from "jsdom";
 import { Metadata } from "next";
 import { stripHtmlAndDecode } from "@/app/utils/helpers";
 import Footer from "@/app/components/Footer";
 import SocialIcons from "@/app/components/SocialIcons";
 import OpenToWorkBanner from "@/app/components/OpenToWorkBanner";
+import { cache } from "react";
+import { notFound } from "next/navigation";
+import { TPost } from "@/app/utils/types";
 
-type TProps = {
-    params: Promise<{
-        slug: string;
-    }>;
-};
+const BASE_URL = "https://akanni-hannah-ibukun.netlify.app";
 
-export async function generateMetadata(props: TProps): Promise<Metadata> {
-    const params = await props.params;
-    const blog = await fetchBlog(params.slug);
+type TProps = { params: { slug: string } };
 
-    const description = stripHtmlAndDecode(blog.excerpt.rendered);
+// Fetch blog data (cached)
+const getBlogData = cache(async (slug: string): Promise<TPost | null> => {
+  try {
+    const blog = await fetchBlog(slug);
+    return blog ?? null;
+  } catch (error) {
+    console.error(`Failed to fetch blog post for slug ${slug}:`, error);
+    return null;
+  }
+});
+
+// Create syntax highlighter (cached)
+const getHighlighter = cache(async () => {
+  return createHighlighter({
+    langs: ["javascript","typescript","json","html","css","bash","jsx","tsx","markdown","text"],
+    themes: ["ayu-dark"],
+  });
+});
+
+// Generate metadata
+export async function generateMetadata({ params }: TProps): Promise<Metadata> {
+  const blog = await getBlogData(params.slug);
+
+  if (!blog) {
     return {
-        title: blog.title.rendered + " - Alvin Chang",
-        description,
-        keywords:
-            blog.title.rendered +
-            ", " +
-            blog._embedded["wp:term"][1].map((tag: any) => tag.name).join(", "),
-        alternates: {
-            canonical: `https://alvinchang.dev/blogs/${blog.slug}`,
-        },
-        openGraph: {
-            title: blog.title.rendered + " - Alvin Chang",
-            description,
-            url: `https://alvinchang.dev/blogs/${blog.slug}`,
-            type: "article",
-            siteName: "Alvin Chang",
-            images: [
-                {
-                    url: "/horizontal-logo.png",
-                    width: 1100,
-                    height: 300,
-                    alt: "Alvin Chang Portfolio Logo",
-                },
-            ],
-        },
+      title: "Blog Post Not Found - Akanni Hannah",
+      description: "The requested blog post could not be found.",
     };
+  }
+
+  const description = stripHtmlAndDecode(blog.excerpt?.rendered || blog.content.rendered);
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: `${blog.title.rendered} - Akanni Hannah`,
+    description,
+    keywords: blog.title.rendered,
+    alternates: { canonical: `${BASE_URL}/blogs/${blog.slug}` },
+    openGraph: {
+      title: `${blog.title.rendered} - Akanni Hannah`,
+      description,
+      url: `${BASE_URL}/blogs/${blog.slug}`,
+      type: "article",
+      siteName: "Akanni Hannah",
+      images: [
+        { url: "/horizontal-logo.png", width: 1100, height: 300, alt: "Akanni Hannah Portfolio Logo" },
+      ],
+    },
+  };
 }
 
-export default async function BlogPage(props: TProps) {
-    const params = await props.params;
-    const blog = await fetchBlog(params.slug);
+// Highlight code blocks
+const highlightCodeBlocks = async (htmlContent: string): Promise<string> => {
+  const highlighter: Highlighter = await getHighlighter();
+  const dom = new JSDOM(htmlContent);
+  const document = dom.window.document;
 
-    // Function to highlight code blocks
-    const highlightCodeBlocks = async (htmlContent: string) => {
-        const highlighter = await createHighlighter({
-            langs: ["javascript"],
-            themes: ["ayu-dark"],
-        });
-        const dom = new JSDOM(htmlContent);
-        const document = dom.window.document;
+  const blocks = Array.from(document.querySelectorAll("pre code")) as Element[];
 
-        const blocks = Array.from(document.querySelectorAll("pre code"));
-        await Promise.all(
-            blocks.map(async (block: any) => {
-                block.innerHTML = block.innerHTML.replaceAll("<br>", "\n");
-                const content = block.textContent;
+  await Promise.all(blocks.map(async (block) => {
+    const content = block.textContent || "";
+    block.innerHTML = block.innerHTML.replaceAll("<br>", "\n");
 
-                const highlighted = await highlighter.codeToHtml(
-                    content || "",
-                    {
-                        lang: "javascript",
-                        theme: "ayu-dark",
-                    }
-                );
-                block.parentElement.innerHTML = highlighted;
-            })
-        );
+    const languageClass = Array.from(block.classList).find((c) => c.startsWith("language-"));
+    const lang = languageClass ? languageClass.replace("language-", "") : "text";
 
-        // Dispose of the highlighter
-        highlighter.dispose();
+    const highlighted = await highlighter.codeToHtml(content, { lang, theme: "ayu-dark" });
 
-        return document.body.innerHTML;
-    };
+    if (block.parentElement) {
+      block.parentElement.outerHTML = highlighted;
+    }
+  }));
 
-    // Preprocess the content to highlight code blocks
-    const highlightedContent = await highlightCodeBlocks(blog.content.rendered);
+  return document.body.innerHTML;
+};
 
-    return (
-        <div className="w-full flex justify-center">
-            <main className="w-full min-h-screen max-w-[800px] p-2">
-                <BlogHeader />
-                {blog && (
-                    <BlogContent blog={blog} content={highlightedContent} />
-                )}
-                <Footer noAnimate />
-                <SocialIcons noAnimate />
-                <OpenToWorkBanner />
-            </main>
-        </div>
-    );
+// Page component
+export default async function BlogPage({ params }: TProps) {
+  const blog = await getBlogData(params.slug);
+  if (!blog) notFound();
+
+  const highlightedContent = await highlightCodeBlocks(blog.content.rendered);
+
+  return (
+    <div className="w-full flex justify-center">
+      <main className="w-full min-h-screen max-w-[800px] p-2">
+        <BlogHeader />
+        <BlogContent blog={blog} content={highlightedContent} />
+        <Footer noAnimate />
+        <SocialIcons noAnimate />
+        <OpenToWorkBanner />
+      </main>
+    </div>
+  );
 }

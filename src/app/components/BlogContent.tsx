@@ -1,3 +1,4 @@
+// src/app/components/BlogContent.tsx - FULLY CORRECT
 import { formatDate } from "../utils/helpers";
 import ArticleContent from "./ArticleContent";
 

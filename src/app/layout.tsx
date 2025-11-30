@@ -10,38 +10,47 @@ import Plausible from "./components/Plausible";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+// Define your Netlify URL and Name for global metadata consistency
+const BASE_URL = 'https://akanni-hannah-ibukun.netlify.app';
+const SITE_NAME = 'Akanni Hannah';
+
 // const geistSans = localFont({
-//     src: "./fonts/GeistVF.woff",
-//     variable: "--font-geist-sans",
-//     weight: "100 900",
-// });
-// const geistMono = localFont({
-//     src: "./fonts/GeistMonoVF.woff",
-//     variable: "--font-geist-mono",
-//     weight: "100 900",
+//     src: "./fonts/GeistVF.woff",
+//     variable: "--font-geist-sans",
+//     weight: "100 900",
 // });
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: siteConfig.title,
+    // 1. 🚨 CRITICAL FIX: Add metadataBase to resolve relative image URLs
+    metadataBase: new URL(BASE_URL),
+    
+    // 2. FIX: Ensure site title uses the correct name
+    title: {
+        default: siteConfig.title,
+        template: `%s | ${SITE_NAME}`, // Ensures individual page titles include your name
+    },
     description: siteConfig.description,
     keywords: siteConfig.keywords,
     alternates: {
-        canonical: siteConfig.url,
+        // 3. FIX: Canonical URL uses the Netlify domain
+        canonical: BASE_URL,
     },
     openGraph: {
         title: siteConfig.title,
         description: siteConfig.description,
-        url: siteConfig.url,
+        url: BASE_URL,
         type: "website",
-        siteName: siteConfig.title,
+        // 4. FIX: Use corrected site name
+        siteName: SITE_NAME, 
         images: [
             {
-                url: "/Portfolio.png",
+                url: "/Portfolio.png", // Will now correctly resolve to BASE_URL/Portfolio.png
                 width: 1920,
                 height: 1080,
-                alt: "Alvin Chang Portfolio",
+                // 5. FIX: Update alt text
+                alt: `${SITE_NAME} Portfolio`, 
             },
         ],
     },
@@ -55,6 +64,7 @@ export default function RootLayout({
     return (
         <html lang="en" className="dark">
             <head>
+                {/* Favicon links */}
                 <link
                     rel="icon"
                     type="image/png"
@@ -70,13 +80,14 @@ export default function RootLayout({
                 />
                 <meta
                     name="apple-mobile-web-app-title"
-                    content="AlvinChang.dev"
+                    // 6. FIX: Update Apple touch title
+                    content={SITE_NAME} 
                 />
                 <link rel="manifest" href="/site.webmanifest" />
                 <link 
                     rel="alternate" 
                     type="application/rss+xml" 
-                    title={`RSS Feed for ${siteConfig.name}'s Blog`} 
+                    title={`RSS Feed for ${SITE_NAME}'s Blog`} 
                     href="/feed.xml" 
                 />
             </head>

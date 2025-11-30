@@ -1,34 +1,48 @@
+// File: app/sitemap.ts
+
 import { MetadataRoute } from "next";
 
-// Fetch function from your utils
+// Fetch function from your utils (Must be configured with cache: 'no-store' internally)
 import { fetchBlogsFromNetlify } from "../app/utils/fetchNetlify";
 import { TPost } from "./utils/types";
 
-// Base URL from environment variable
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+// Base URL: Use the environment variable, falling back to the Netlify app URL for safety
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://akanni-hannah-ibukun.netlify.app';
 
 export async function generateSitemaps() {
-  const sitemapIndexes = [{ id: 0 }];
-  return sitemapIndexes;
+    // This function signals Next.js to generate one sitemap (0.xml)
+    const sitemapIndexes = [{ id: 0 }];
+    return sitemapIndexes;
 }
 
 export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
-  if (!BASE_URL) {
-    throw new Error("NEXT_PUBLIC_SITE_URL is not defined in .env.local");
-  }
+    
+    // Ensure the BASE_URL is present before proceeding
+    if (!BASE_URL) {
+        throw new Error("Sitemap Error: NEXT_PUBLIC_SITE_URL is not defined.");
+    }
 
-  // Fetch blogs from Netlify
-  const posts: TPost[] = await fetchBlogsFromNetlify();
+    // Fetch blogs from Netlify (This function must use cache: 'no-store')
+    // We only fetch if the index is 0, since we only have one sitemap index.
+    if (id === 0) {
+        const posts: TPost[] = await fetchBlogsFromNetlify();
 
-  return [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-    },
-    ...posts.map((post: TPost) => ({
-      url: `${BASE_URL}/blogs/${post.slug}`,
-      lastModified: new Date(post.modified_gmt),
-      priority: 0.8,
-    }))
-  ];
+        return [
+            // Sitemap entry for the root page
+            {
+                url: BASE_URL,
+                lastModified: new Date(),
+                priority: 1.0, // Set higher priority for the homepage
+            },
+            // Sitemap entries for individual blog posts
+            ...posts.map((post: TPost) => ({
+                url: `${BASE_URL}/blogs/${post.slug}`,
+                lastModified: new Date(post.modified_gmt),
+                priority: 0.8,
+            }))
+        ];
+    }
+
+    // Return an empty array for any ID outside of what generateSitemaps returns
+    return [];
 }

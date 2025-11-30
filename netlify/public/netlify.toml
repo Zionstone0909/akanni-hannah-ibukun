@@ -1,23 +1,25 @@
 # netlify.toml
 
 [build]
-  # The directory where Next.js outputs the build
-  publish = ".next"
   # Command to build your Next.js project
   command = "npm run build"
-
-# Redirect all requests to Next.js
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-# Specify Netlify Functions directory
+  # The directory where Next.js outputs the build. 
+  # This should generally be ".next" for the Netlify Next.js plugin to work correctly.
+  publish = ".next"
+  
+# Specify Netlify Functions source directory
+# This tells Netlify where your *source* TypeScript functions are located.
 [functions]
   directory = "netlify/functions"
+  # Optional: ensures TypeScript files are bundled correctly
+  node_bundler = "esbuild" 
 
 # Optional environment variables (can also be set in Netlify UI)
 [build.environment]
   NEXT_PUBLIC_SITE_URL = "https://akanni-blog.netlify.app"
   NODE_ENV = "production"
+
+# Remove the generic [[redirects]] section below if you rely on Next.js routing.
+# The Next.js plugin handles necessary internal redirects automatically.
+# If you need custom redirects, define them in a `_redirects` file or specific 
+# [[redirects]] rules, but avoid the `/*` forced redirect that bypasses Next.js.

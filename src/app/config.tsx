@@ -9,6 +9,10 @@ import {
     RiWordpressFill,
 } from "react-icons/ri";
 import {
+    SiVercel,
+    SiGithubactions,
+    SiAngular,
+    SiLaravel,
     SiTypescript,
     SiShadcnui,
     SiPrisma,
@@ -39,14 +43,20 @@ import { DiRedis } from "react-icons/di";
 
 
 export const siteConfig = {
-    name: "Alvin Chang",
-    title: "Alvin Chang | Full-Stack Developer",
-    email: "alvin@studioaurora.io",
+    name: "Akanni Hannah Ibukun",
+    title: "Akanni Hannah Ibukun | Full-Stack Developer",
+    email: "hannahakanni7@gmail.com",
     alias: "Aurora",
-    description:
-        "Alvin Chang is a web developer who builds scalable, user-centric applications using Next.js, WordPress, and other frameworks. With a focus on performance, accessibility, and clean code, Alvin creates digital solutions that are both functional and aesthetically pleasing.",
+    description: `
+Akanni Hannah Ibukun is a web developer who builds scalable, user-centric applications using modern frameworks like Next.js, React, WordPress, and PHP. With expertise in JavaScript, TypeScript, Node.js, and database technologies such as PostgreSQL and MongoDB, Akanni creates high-performance, accessible, and maintainable digital solutions.  
+
+Passionate about clean code and seamless user experiences, Akanni develops websites, web apps, e-commerce platforms, and custom API integrations. Experienced in both front-end and back-end development, he combines creativity and technical skill to deliver responsive, SEO-friendly, and visually engaging applications.  
+
+He is also adept at integrating third-party services, automating workflows, and optimizing applications for speed and scalability, ensuring projects not only meet but exceed client expectations. Always exploring new technologies and frameworks, Akanni continues to innovate and craft solutions that make a real impact.
+`,
+
     keywords:
-        "Alvin Chang, full-stack developer, web development, Next.js, WordPress, React, Node.js, scalable applications, clean code",
+        "Akanni Hannah Ibukun, full-stack developer, web development,CRM Specialist, Next.js,Nodejs, ph WordPress, React, Node.js, scalable applications, clean code",
     url: "https://alvinchang.dev",
     taglines: [
         "🚀 Coding Simplicity, Crafting Solutions: Bringing Ideas to Life, One Line at a Time. ✨ Let's transform challenges into digital possibilities with precision and creativity!",
@@ -57,31 +67,32 @@ export const siteConfig = {
     socialLinks: [
         {
             icon: <FaGithub />,
-            url: "https://github.com/auroradream04",
+            url: "https://github.com/Zionstone0909",
         },
         {
             icon: <FaLinkedin />,
-            url: "https://www.linkedin.com/in/auroradream04/",
+            url: "https://www.linkedin.com/in/hannah-akanni-994123390",
         },
         {
             icon: <FaSquareXTwitter />,
-            url: "https://x.com/aurora_dream04",
+                        url: "https://x.com/HannahAkanniIBK?t=PT6kPGGubzQHEkH2kFhc3w&s=08",
+
         },
         {
             icon: <FaThreads />,
-            url: "https://www.threads.com/@schrodinger0404",
+            url: "https://www.threads.com/@blackskingirl_anna6",
         },
         {
             icon: <SiBluesky />,
-            url: "https://bsky.app/profile/alvinchang.dev",
-        },
+            url: "https://bsky.app/profile/akanni-hannah.bsky.social",
+         },
         {
             icon: <FaDiscord />,
-            url: "https://discord.gg/pwYGjDebkF",
+            url: "https://discord.gg/4sPCUmDz",
         },
         {
             icon: <IoIosMail />,
-            url: "mailto:alvin@studioaurora.io",
+            url: "mailto:hannahakanni7@gmail.com",
         },
     ],
     sections: {
@@ -136,26 +147,25 @@ export const siteConfig = {
             {
                 company: "Freelance",
                 position: "Full-stack Web Developer",
-                duration: "2024 - Present",
+                duration: "2022 - Present",
                 description:
-                    "Built responsive web apps, e-commerce platforms, and custom API solutions primarily using Next.js, Tailwind CSS, and TypeScript. Managed entire development lifecycles from initial client consultation and strategic planning to development, deployment, and ongoing support. Focused heavily on delivering high-performance, SEO-friendly solutions with modern, intuitive user experiences, ensuring client satisfaction through proactive communication and timely project delivery.",
+                    "Architected and delivered high-performance web applications, e-commerce platforms, and custom API solutions using Next.js, Tailwind CSS, and TypeScript. Oversaw the entire development lifecycle, from client consultation and strategic planning through deployment and support. Specialized in creating SEO-friendly solutions and modern user experiences, consistently ensuring client satisfaction through proactive communication and timely project delivery."
             },
             {
-                company: "Altera Karna Business Corp.",
-                position: "Software Engineer",
+                company: "Only God is wise.",
+                position: "Software developer",
                 duration: "2023 - 2024",
                 description:
-                    "Developed and maintained various dynamic websites such as streaming services, interactive landing pages, and content-driven news platforms utilizing Next.js, WordPress, and Express.js. Engineered robust APIs and automated internal processes with advanced web scraping tools, significantly enhancing operational efficiency. Additionally, designed and built desktop applications using Electron to streamline internal workflows and support team productivity.",
-            },
+ "Developed and maintained various dynamic websites, web applications, and backend services. Utilized PHP and content management systems like WordPress for server-side logic and platform management. Created robust, user-facing experiences with front-end technologies including JavaScript, React, and Tailwind CSS. Focused on scalable, responsive design and efficient data management across diverse projects."            },
         ],
         projects: [
             {
-                title: "Alvin Chang | Portfolio Website",
+                title: "Akanni Hannah | Portfolio Website",
                 description:
                     "This is my portfolio website. I built it to showcase my projects and skills. It is a static site built with Next.js, Tailwind CSS, and Shadcn/UI. I used the following technologies to build it:",
                 logo: "/projects/portfolio/portfolio-logo.webp",
                 thumbnail: "/projects/portfolio/portfolio-thumbnail.webp",
-                repoLink: "https://github.com/auroradream04/aurora-portfolio",
+                repoLink: "https://github.com/Zionstone0909/akanni-hannah-ibukun",
                 technologies: [
                     {
                         icon: <RiNextjsFill className="text-[#FFF]" />,
@@ -174,7 +184,7 @@ export const siteConfig = {
                         name: "TypeScript",
                     },
                 ],
-                link: "https://alvinchang.dev",
+                link: "https://akanni-hannah.netlify.app",
                 previewImages: [
                     "/projects/portfolio/1.webp",
                     "/projects/portfolio/2.webp",
@@ -332,6 +342,7 @@ export const siteConfig = {
                         icon: <RiNextjsFill className="text-[#FFF]" />,
                         name: "Next.js",
                     },
+                        
                     {
                         icon: <SiTypescript className="text-[#3178C6]" />,
                         name: "TypeScript",
@@ -371,16 +382,34 @@ export const siteConfig = {
                     icon: <RiNextjsFill className="text-[#FFF]" />,
                     description: "A React framework",
                 },
+                
                 {
                     name: "React",
                     icon: <SiReact className="text-[#61DAFB]" />,
                     description: "A JavaScript UI library",
                 },
                 {
+                    name: "Vercel",
+                    icon: <SiVercel className="text-[#FFF]" />,
+                    description: "Platform for frontend frameworks",
+                },
+                
+                {
                     name: "Tailwind CSS",
                     icon: <RiTailwindCssFill className="text-[#06B6D4]" />,
                     description: "A CSS framework",
                 },
+                                {
+                    name: "PHP",
+                    icon: <SiPhp className="text-[#777BB4]" />,
+                    description: "A popular general-purpose scripting language",
+                },
+                {
+                    name: "Angular",
+                    icon: <SiAngular className="text-[#DD0031]" />,
+                    description: "A TypeScript web application framework", // Can be removed if in 'other'
+                },
+                
                 {
                     name: "TypeScript",
                     icon: <SiTypescript className="text-[#3178C6]" />,
@@ -390,6 +419,11 @@ export const siteConfig = {
                     name: "Git",
                     icon: <SiGit className="text-[#F05032]" />,
                     description: "A version control system",
+                },
+            {
+                    name: "Laravel",
+                    icon: <SiLaravel className="text-[#FF2D20]" />,
+                    description: "A PHP web application framework",
                 },
                 {
                     name: "Prisma",
@@ -468,6 +502,11 @@ export const siteConfig = {
                 {
                     name: "WooCommerce",
                     icon: <SiWoocommerce className="text-[#96588A]" />,
+                },
+                {
+                    name: "GitHub Actions",
+                    icon: <SiGithubactions className="text-[#2670e0]" />,
+                    description: "CI/CD automation platform",
                 },
                 {
                     name: "React Native",

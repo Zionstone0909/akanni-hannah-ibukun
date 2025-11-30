@@ -113,7 +113,7 @@ export default function ContactForm() {
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Alvin Chang"
+                                            placeholder="Akanni Hannah Ibukun"
                                             {...field}
                                             className="bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.1)] text-white text-xs p-2 rounded-sm focus:ring-orange-500"
                                         />
@@ -132,7 +132,7 @@ export default function ContactForm() {
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="alvin@studioaurora.io"
+                                            placeholder="hannahakanni7@gmail.com"
                                             {...field}
                                             className="bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.1)] text-white text-xs p-2 rounded-sm focus:ring-orange-500"
                                         />
@@ -151,7 +151,7 @@ export default function ContactForm() {
                                     </FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="I would like to request a quote for a website design..."
+                                                placeholder="I would like to request a quote for a website design/mobile app/web app..."
                                             {...field}
                                             className="bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.1)] text-white text-xs p-2 rounded-sm focus:ring-orange-500 w-full"
                                             rows={4}
