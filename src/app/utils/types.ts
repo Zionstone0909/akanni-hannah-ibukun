@@ -32,7 +32,6 @@ export interface TPostEmbedded {
         Array<any>, // Position [0]: Reserved/Categories (can be empty)
         Array<TTag> // Position [1]: The list of tags
     ];
-    // Removed complex media/links/meta as they are likely not needed by your app
 }
 
 
@@ -66,7 +65,28 @@ export type TPost = {
 // --- Aliases for Component Use ---
 
 /**
- * Type alias for the specific post structure expected by the single blog page, 
- * ensuring compatibility with the rest of your application's types (TLocalPost).
+ * Local post type used by the frontend (Homepage, Post page, etc.).
+ * This is the **flattened** version of TPost after transformation.
  */
-export type TLocalPost = TPost;
+export interface TLocalPost {
+    /** The post date in ISO string format. */
+    date: string;
+
+    /** The simplified string title. */
+    title: string;
+
+    /** URL slug for routing. */
+    slug: string;
+
+    /** Full HTML content (string). */
+    content: string;
+
+    /** Excerpt (string). */
+    excerpt: string;
+
+    /** Simple list of tag names (after extraction). */
+    tags: string[];
+
+    /** Numeric ID generated or passed from the API. */
+    id: number;
+}

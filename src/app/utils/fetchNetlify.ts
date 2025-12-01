@@ -2,82 +2,83 @@
 
 import { TPost } from "./types";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 const isDev = process.env.NODE_ENV === "development";
 
-// Define the effective base URL clearly.
-// For Netlify functions, we need the full URL in production/SSG builds.
-const effectiveBaseUrl: string = siteUrl || (isDev ? "http://localhost:8888" : "");
-
-if (!effectiveBaseUrl && !isDev) {
-  throw new Error(
-    "NEXT_PUBLIC_SITE_URL is missing. Set it in .env.local for production builds."
-  );
-}
+// Determine base URL cleanly
+const effectiveBaseUrl: string =
+    siteUrl.trim() !== ""
+        ? siteUrl
+        : isDev
+        ? "http://localhost:8888"
+        : "";
 
 /**
- * Generic helper for fetching data from Netlify Functions using the URL API.
- * @param endpoint The function endpoint (e.g., 'posts' or 'posts?slug=x').
- * @returns A promise resolving to the decoded JSON data or null on failure.
+ * Generic helper for fetching data from Netlify Functions.
+ * Works in dev and production safely.
  */
 async function fetchHelper<T>(endpoint: string): Promise<T | null> {
-  let url: URL;
-  
-  let path = `/.netlify/functions/${endpoint.replace(/^\/+/, '')}`;
-    
-    // Determine the final URL used for fetch
-    const fetchUrl = effectiveBaseUrl ? 
-        new URL(path, effectiveBaseUrl).toString() : // Use full base URL if available
-        path; // Otherwise use relative path for local dev/SSR
+    let path = `/.netlify/functions/${endpoint.replace(/^\/+/, "")}`;
 
-  try {
-    const res = await fetch(fetchUrl, { 
-        next: {
-            revalidate: 3600 // Cache data for 1 hour
-        },
-    });
+    // If we have no base URL in production, warn instead of crashing
+    if (!isDev && !effectiveBaseUrl) {
+        console.error(
+            "❌ NEXT_PUBLIC_SITE_URL is missing. Netlify functions cannot be called in production builds."
+        );
+        return null;
+    }
 
-    if (!res.ok) {
-        // ENHANCEMENT: Attempt to read JSON error body for better logging
-        const errorBody = await res.json().catch(() => ({ message: res.statusText }));
-        console.error(`❌ Failed to fetch ${fetchUrl}: Status ${res.status}`, errorBody);
-        return null;
-    }
+    const fetchUrl = effectiveBaseUrl
+        ? new URL(path, effectiveBaseUrl).toString()
+        : path; // fallback for localhost
 
-    return (await res.json()) as T;
+    try {
+        const res = await fetch(fetchUrl, {
+            next: { revalidate: 3600 },
+        });
 
-  } catch (error) {
-    console.error(`❌ Fetch error for ${endpoint} at ${fetchUrl}:`, error);
-    return null;
-  }
+        if (!res.ok) {
+            const errorBody = await res.json().catch(() => ({}));
+            console.error(`❌ Failed to fetch ${fetchUrl}`, {
+                status: res.status,
+                ...errorBody,
+            });
+            return null;
+        }
+
+        return (await res.json()) as T;
+    } catch (error) {
+        console.error(`❌ Fetch error for ${fetchUrl}:`, error);
+        return null;
+    }
 }
 
 /**
- * Fetch ALL blogs
+ * Fetch ALL blogs.
  */
 export async function fetchBlogs(): Promise<TPost[]> {
-  const data = await fetchHelper<TPost[]>("posts");
-  return data ?? [];
+    const data = await fetchHelper<TPost[]>("posts");
+    return data ?? [];
 }
 
 /**
- * Re-export for sitemap
+ * Alias for sitemap.xml generator.
  */
 export { fetchBlogs as fetchBlogsFromNetlify };
 
 /**
- * Fetch blog by slug - LOGIC CORRECTED
+ * Fetch a single blog by slug.
  */
 export async function fetchBlog(slug: string): Promise<TPost | null> {
-  if (!slug) return null;
+    if (!slug) return null;
 
-  // We expect the Netlify function to return an array of TPost
-  const data = await fetchHelper<TPost[]>(`posts?slug=${encodeURIComponent(slug)}`);
-  
-  // Return the FIRST element of the array, matching the Promise<TPost | null> signature
-  if (Array.isArray(data) && data.length > 0) {
-      return data[0]; 
-  }
+    const data = await fetchHelper<TPost[]>(`posts?slug=${encodeURIComponent(slug)}`);
 
-  return null;
+    if (!data || !Array.isArray(data)) return null;
+
+    // Netlify function normally returns 1 element
+    const first = data[0];
+    if (first) return first;
+
+    return null;
 }

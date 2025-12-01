@@ -31,14 +31,23 @@ export function formatBlogDate(dateString: string): string {
 
 /**
  * Removes HTML tags and decodes HTML entities (e.g., &amp; -> &).
- * @param html The HTML string (e.g., blog excerpt).
+ * 
+ * NOTE: This function now safely handles inputs that might be null or undefined,
+ * returning an empty string in those cases to prevent runtime errors.
+ * 
+ * @param html The HTML string (e.g., blog excerpt) or potentially null/undefined value.
  * @returns The cleaned, plain text string.
  */
-export function stripHtmlAndDecode(html: string): string {
+export function stripHtmlAndDecode(html: string | undefined | null): string {
+    // Add this safety check for null/undefined inputs
+    if (html == null) {
+        return '';
+    }
+    
     // 1. Remove HTML tags using a robust global regex
     const textWithoutTags = html.replace(/<[^>]*>?/g, '');
     
-    // 2. Decode HTML entities (e.g., &quot;, &#39;)
+    // 2. Decode HTML entities (e.g., &quot;, ')
     const decodedText = he.decode(textWithoutTags);
     
     // 3. Trim leading/trailing whitespace

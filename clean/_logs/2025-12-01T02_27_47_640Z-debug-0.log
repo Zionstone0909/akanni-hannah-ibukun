@@ -5,9 +5,14 @@
 4 silly config load:file:C:\Users\HP\Downloads\Akanni Hannah Ibukun\.npmrc
 5 silly config load:file:C:\Users\HP\.npmrc
 6 silly config load:file:C:\Users\HP\AppData\Roaming\npm\etc\npmrc
-7 verbose title npm run dev
-8 verbose argv "run" "dev"
-9 verbose logfile logs-max:10 dir:C:\Users\HP\Downloads\Akanni Hannah Ibukun\clean\_logs\2025-11-30T10_22_13_663Z-
-10 verbose logfile C:\Users\HP\Downloads\Akanni Hannah Ibukun\clean\_logs\2025-11-30T10_22_13_663Z-debug-0.log
+7 verbose title npm build
+8 verbose argv "build"
+9 verbose logfile logs-max:10 dir:C:\Users\HP\Downloads\Akanni Hannah Ibukun\clean\_logs\2025-12-01T02_27_47_640Z-
+10 verbose logfile C:\Users\HP\Downloads\Akanni Hannah Ibukun\clean\_logs\2025-12-01T02_27_47_640Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
-12 silly logfile done cleaning log files
+12 verbose cwd C:\Users\HP\Downloads\Akanni Hannah Ibukun
+13 verbose os Windows_NT 10.0.22000
+14 verbose node v24.11.0
+15 verbose npm  v11.6.3
+16 verbose exit 1
+17 verbose code 1

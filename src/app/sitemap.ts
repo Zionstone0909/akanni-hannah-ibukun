@@ -4,7 +4,20 @@ import { MetadataRoute } from "next";
 
 // Fetch function from your utils (Must be configured with cache: 'no-store' internally)
 import { fetchBlogsFromNetlify } from "../app/utils/fetchNetlify";
-import { TPost } from "./utils/types";
+// Ensure TPost definition is correct:
+import { TPost } from "./utils/types"; 
+// Example TPost definition from previous turns (assuming this is what you have):
+/*
+export type TPost = {
+    id: number;
+    date: string; // ISO 8601 date string (used for both created and modified)
+    slug: string; 
+    title: string; 
+    content: string; 
+    excerpt: string; 
+    tags: string[]; 
+};
+*/
 
 // Base URL: Use the environment variable, falling back to the Netlify app URL for safety
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://akanni-hannah-ibukun.netlify.app';
@@ -37,7 +50,8 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
             // Sitemap entries for individual blog posts
             ...posts.map((post: TPost) => ({
                 url: `${BASE_URL}/blogs/${post.slug}`,
-                lastModified: new Date(post.modified_gmt),
+                // 🔑 CORRECTION: Use the 'date' property from TPost, as 'modified_gmt' does not exist on that type.
+                lastModified: new Date(post.date), 
                 priority: 0.8,
             }))
         ];
