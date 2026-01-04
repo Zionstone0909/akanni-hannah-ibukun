@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { siteConfig } from "../config";
+import allBlogs from "../data/blogs";
 import { motion } from "framer-motion";
 import { slideInFromTop, slideInFromLeft } from "../utils/motion";
 
@@ -11,6 +12,11 @@ type TProps = {
 };
 
 export default function Footer({ isSticky, noAnimate }: TProps) {
+    // Determine most recent blog year (fallback to current year)
+    const latestYear = allBlogs && allBlogs.length > 0
+        ? Math.max(...allBlogs.map((b) => new Date(b.date).getFullYear()))
+        : new Date().getFullYear();
+
     return (
         <motion.footer
             variants={!isSticky ? slideInFromTop(1) : slideInFromLeft(1)}
@@ -34,7 +40,7 @@ export default function Footer({ isSticky, noAnimate }: TProps) {
                 </Link>
             </p>
             <p className="mb-0">
-                &copy; 2024 {siteConfig.title}. All rights
+                &copy; {latestYear} {siteConfig.title}. All rights
                 reserved.
             </p>
         </motion.footer>

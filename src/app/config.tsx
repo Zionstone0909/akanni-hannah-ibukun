@@ -46,7 +46,7 @@ export const siteConfig = {
     name: "Akanni Hannah Ibukun",
     title: "Akanni Hannah Ibukun | Full-Stack Developer",
     email: "hannahakanni7@gmail.com",
-    alias: "Aurora",
+    alias: "Zionstone",
     description: `
 Akanni Hannah Ibukun is a web developer who builds scalable, user-centric applications using modern frameworks like Next.js, React, WordPress, and PHP. With expertise in JavaScript, TypeScript, Node.js, and database technologies such as PostgreSQL and MongoDB, Akanni creates high-performance, accessible, and maintainable digital solutions.  
 
@@ -57,7 +57,7 @@ He is also adept at integrating third-party services, automating workflows, and 
 
     keywords:
         "Akanni Hannah Ibukun, full-stack developer, web development,CRM Specialist, Next.js,Nodejs, ph WordPress, React, Node.js, scalable applications, clean code",
-    url: "https://alvinchang.dev",
+    url: "https://akanni-hannah.netlify.app",
     taglines: [
         "🚀 Coding Simplicity, Crafting Solutions: Bringing Ideas to Life, One Line at a Time. ✨ Let's transform challenges into digital possibilities with precision and creativity!",
         "🎨 Where Code Meets Creativity: Building Digital Experiences that Matter. 🌐 From intuitive interfaces to powerful backend systems, I create solutions that engage and inspire.",
@@ -145,18 +145,26 @@ He is also adept at integrating third-party services, automating workflows, and 
 
         experiences: [
             {
-                company: "Freelance",
-                position: "Full-stack Web Developer",
-                duration: "2022 - Present",
+                company: "Fortizon Digital Solutions",
+                position: "Full Stack Developer",
+                duration: "2024 - 2025",
                 description:
-                    "Architected and delivered high-performance web applications, e-commerce platforms, and custom API solutions using Next.js, Tailwind CSS, and TypeScript. Oversaw the entire development lifecycle, from client consultation and strategic planning through deployment and support. Specialized in creating SEO-friendly solutions and modern user experiences, consistently ensuring client satisfaction through proactive communication and timely project delivery."
+                    "Utilized expertise in both frontend and backend development to design, develop, and deploy scalable web applications that meet client requirements. Created dynamic and responsive user interfaces using HTML, CSS, JavaScript and frameworks like React and Angular. Built RESTful APIs and backend services with Node.js, integrated SQL and NoSQL databases, and implemented secure authentication/authorization (OAuth, JWT). Participated in CI/CD pipelines and deployed applications using Docker and AWS, ensuring reliability and performance."
             },
             {
-                company: "Only God is wise.",
-                position: "Software developer",
-                duration: "2023 - 2024",
+                company: "Vok Technologies, Akure (Ondo State)",
+                position: "Full Stack Developer",
+                duration: "2022 - 2024",
                 description:
- "Developed and maintained various dynamic websites, web applications, and backend services. Utilized PHP and content management systems like WordPress for server-side logic and platform management. Created robust, user-facing experiences with front-end technologies including JavaScript, React, and Tailwind CSS. Focused on scalable, responsive design and efficient data management across diverse projects."            },
+                    "Designed and implemented database schemas, optimized queries, and ensured data integrity using SQL and NoSQL databases. Developed secure authentication and authorization systems and integrated third-party APIs. Improved application performance, wrote unit/integration tests, and collaborated with cross-functional teams to deliver robust, client-facing features."
+            },
+            {
+                company: "Classic Infotech, Ile-Ife (Osun State)",
+                position: "Intern",
+                duration: "2021 - 2022",
+                description:
+                    "Assisted in designing, developing, and testing web applications using HTML, CSS, JavaScript, and frameworks such as React and Node.js. Helped integrate third-party APIs, contributed to writing unit tests, and supported deployment and QA tasks to ensure application stability and performance."
+            },
         ],
         projects: [
             {
@@ -203,7 +211,7 @@ He is also adept at integrating third-party services, automating workflows, and 
                     "GenZify is an AI-powered tool I developed to transform everyday text into trendy Gen Z-style language. I managed both the front-end design and back-end development, integrating AI functionality for smooth and creative rephrasings. The platform delivers a fun, engaging experience, perfect for anyone looking to add a modern twist to their communication. This project highlights my skills in blending AI with user-centric design to create a playful, interactive web tool.",
                 logo: "/projects/genz/genz-logo.webp",
                 thumbnail: "/projects/genz/genz-thumbnail.webp",
-                repoLink: "https://github.com/auroradream04/genzify-app",
+                repoLink: "https://github.com/zionstonedream04/genzify-app",
                 technologies: [
                     {
                         icon: <RiNextjsFill className="text-[#FFF]" />,

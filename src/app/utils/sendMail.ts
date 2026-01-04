@@ -2,7 +2,7 @@
 
 import nodemailer from "nodemailer";
 
-export async function sendMail(name: string, email: string, message: string) {
+export async function sendMail(name: string, email: string, message: string, projectType?: string) {
     try {
         // Nodemailer transport setup for Zoho Mail
         let mailTransporter = nodemailer.createTransport({
@@ -23,9 +23,9 @@ export async function sendMail(name: string, email: string, message: string) {
         // Email content details
         const mailDetails = {
             from: process.env.ZOHO_USER,
-            to: "hannahakanni7@gmail.com", 
-            subject: `Contact form submission from ${name}`,
-            text: `From: ${name} <${email}>\n\n${message}`,
+            to: "hannahakanni7@gmail.com",
+            subject: `Contact form submission from ${name}${projectType ? ` — ${projectType}` : ""}`,
+            text: `From: ${name} <${email}>\nProject Type: ${projectType ?? "(not provided)"}\n\n${message}`,
             replyTo: email, // Ensures replies go back to the original sender
         };
 

@@ -16,6 +16,7 @@ import HomepageBlogs from "./components/HomepageBlogs";
 import Technologies from "./components/Technologies";
 import OpenToWorkBanner from "./components/OpenToWorkBanner";
 import { useEffect } from "react";
+import { allBlogs } from "./data/blogs";
 
 // Define the expected prop type for 'blogs'
 // It's highly recommended to define a proper type instead of 'any[]' in a separate types file.
@@ -24,7 +25,8 @@ interface HomeProps {
 }
 
 // Accept the 'blogs' prop here
-export default function Home({ blogs }: HomeProps) {
+export default function Home() {
+    const blogs = allBlogs;
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Person",

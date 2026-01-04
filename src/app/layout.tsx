@@ -14,12 +14,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const BASE_URL = 'https://akanni-hannah-ibukun.netlify.app';
 const SITE_NAME = 'Akanni Hannah';
 
-// const geistSans = localFont({
-//     src: "./fonts/GeistVF.woff",
-//     variable: "--font-geist-sans",
-//     weight: "100 900",
-// });
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,7 +23,7 @@ export const metadata: Metadata = {
     // 2. FIX: Ensure site title uses the correct name
     title: {
         default: siteConfig.title,
-        template: `%s | ${SITE_NAME}`, // Ensures individual page titles include your name
+        template: `%s | ${SITE_NAME}`, 
     },
     description: siteConfig.description,
     keywords: siteConfig.keywords,
@@ -46,7 +40,7 @@ export const metadata: Metadata = {
         siteName: SITE_NAME, 
         images: [
             {
-                url: "/Portfolio.png", // Will now correctly resolve to BASE_URL/Portfolio.png
+                url: "/Portfolio.png", 
                 width: 1920,
                 height: 1080,
                 // 5. FIX: Update alt text
@@ -93,20 +87,23 @@ export default function RootLayout({
             </head>
             <body
                 className={`${inter.className} antialiased bg-background text-slate-100`}
+                // 🚨 HYDRATION FIX: Suppress warnings caused by browser extensions 
+                // injecting attributes like 'bis_skin_checked'
+                suppressHydrationWarning
             >
                 <StarsCanvas />
                 <Glow />
                 <Toaster />
                 <Plausible />
                 <div className="max-w-[2325px] mx-auto">
-                {children}
+                    {children}
                 </div>
+                <Analytics />
+                <SpeedInsights />
+                <GoogleAnalytics
+                    gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""}
+                />
             </body>
-            <Analytics />
-            <SpeedInsights />
-            <GoogleAnalytics
-                gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""}
-            />
         </html>
     );
 }

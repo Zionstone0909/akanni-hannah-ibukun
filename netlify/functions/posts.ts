@@ -13,11 +13,18 @@ interface BlogPost {
 }
 
 // =============================
-// Mock Blog Data (your 20 posts)
+// Mock Blog Data (replace with your actual 20 posts)
 // =============================
-
 const blogs: BlogPost[] = [
-  // ... your entire blog array EXACTLY as you provided it ...
+  // Example post:
+  {
+    slug: "my-first-post",
+    title: "My First Post",
+    content: "<p>Hello World! This is my first post.</p>",
+    date: "2025-12-01",
+    tags: ["intro", "welcome"],
+  },
+  // Add the rest of your 20 posts here...
 ];
 
 // =============================
@@ -32,9 +39,9 @@ const toWordPressShape = (post: BlogPost) => ({
   _embedded: {
     "wp:term": [
       [], // category placeholder
-      post.tags?.map((tag) => ({ name: tag })) ?? []
-    ]
-  }
+      post.tags?.map((tag) => ({ name: tag })) ?? [],
+    ],
+  },
 });
 
 // =============================
@@ -44,7 +51,7 @@ export const handler: Handler = async (event) => {
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, OPTIONS"
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
   };
 
   // Handle CORS preflight
@@ -56,7 +63,7 @@ export const handler: Handler = async (event) => {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ message: "Method Not Allowed" })
+      body: JSON.stringify({ message: "Method Not Allowed" }),
     };
   }
 
@@ -70,7 +77,7 @@ export const handler: Handler = async (event) => {
         return {
           statusCode: 404,
           headers,
-          body: JSON.stringify({ message: `Blog post '${slug}' not found` })
+          body: JSON.stringify({ message: `Blog post '${slug}' not found` }),
         };
       }
 
@@ -78,7 +85,7 @@ export const handler: Handler = async (event) => {
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify([toWordPressShape(raw)])
+        body: JSON.stringify([toWordPressShape(raw)]),
       };
     }
 
@@ -86,14 +93,14 @@ export const handler: Handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(blogs.map(toWordPressShape).reverse())
+      body: JSON.stringify(blogs.map(toWordPressShape).reverse()),
     };
   } catch (error) {
     console.error("Netlify Error:", error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ message: "Internal Server Error" })
+      body: JSON.stringify({ message: "Internal Server Error" }),
     };
   }
 };

@@ -1,31 +1,26 @@
-// File: src/app/blogs/page.tsx
+'use client';
+
 import Link from 'next/link';
-// Assuming TPost and the helpers handle undefined/null safely as discussed previously
-import { TPost } from '@/app/utils/types'; 
-import { fetchBlogs } from '@/app/utils/fetchNetlify';
+import { TPost, fetchBlogs } from '@/app/utils/fetchNetlify'; 
 import { stripHtmlAndDecode, formatBlogDate } from '@/app/utils/helpers';
 import OpenToWorkBanner from '@/app/components/OpenToWorkBanner';
-// Assuming allBlogs is defined correctly in its file and used elsewhere if needed
+import { useEffect, useState } from 'react';
 
 type TBlogListItemProps = {
   blog: TPost;
 };
 
-/**
- * Renders a single blog list item.
- * 
- * Assumes TPost structure guarantees blog.date, blog.title.rendered, and at least 
- * one of blog.excerpt.rendered or blog.content.rendered exists and are strings.
- */
 const BlogListItem = ({ blog }: TBlogListItemProps) => {
-  // Pass strings to helper functions. 
-  // We rely on the helpers.ts logic (which we previously corrected) to handle edge cases internally, 
-  // or on the TPost type definition/API response reliability.
   const date = formatBlogDate(blog.date); 
-  const title = stripHtmlAndDecode(blog.title.rendered);
+  
+  const rawTitle = typeof blog.title === 'string' ? blog.title : blog.title?.rendered || '';
+  const title = stripHtmlAndDecode(rawTitle);
 
-  // Use nullish coalescing to ensure a string is always passed, preventing the original TypeError.
-  const description = stripHtmlAndDecode(blog.excerpt?.rendered || blog.content.rendered || '');
+  const rawExcerpt = typeof blog.excerpt === 'string' 
+    ? blog.excerpt 
+    : blog.excerpt?.rendered || (typeof blog.content === 'string' ? blog.content : blog.content?.rendered) || '';
+    
+  const description = stripHtmlAndDecode(rawExcerpt);
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start border-b border-gray-700 pb-6 mb-6">
@@ -38,24 +33,49 @@ const BlogListItem = ({ blog }: TBlogListItemProps) => {
         </h2>
         <p className="text-gray-400 text-sm mt-1 line-clamp-2">{description}</p>
       </div>
-      <div className="text-left sm:text-right text-sm text-gray-500 min-w-[120px] pt-1">{date}</div>
+      <div className="text-left sm:text-right text-sm text-gray-500 min-w-[120px] pt-1">
+        {date}
+      </div>
     </div>
   );
 };
 
-/**
- * Main page for the blog index.
- */
-export default async function BlogsIndexPage() {
-  // It's generally safer to fetch data with a try-catch block for production apps.
-  let blogs: TPost[] = [];
-  try {
-    blogs = await fetchBlogs();
-  } catch (error) {
-    console.error("Failed to fetch blogs:", error);
-    // In a real app, you might want to display an error message to the user here
+export default function BlogsIndexPage() {
+  const [blogs, setBlogs] = useState<TPost[]>([]);
+  const [displayCount, setDisplayCount] = useState(10);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadBlogs = async () => {
+      try {
+        const data = await fetchBlogs();
+        setBlogs(data || []);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBlogs();
+  }, []);
+
+  const displayedBlogs = blogs.slice(0, displayCount);
+  const hasMore = displayCount < blogs.length;
+
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center bg-gray-900 text-white">
+        <main className="w-full min-h-screen max-w-4xl p-6 sm:p-10">
+          <h1 className="text-4xl font-extrabold text-white mb-2 pt-10">BLOGS</h1>
+          <div className="text-center p-12">
+            <p className="text-gray-400 text-lg">Loading blog posts...</p>
+          </div>
+        </main>
+      </div>
+    );
   }
-  
 
   return (
     <div className="w-full flex justify-center bg-gray-900 text-white">
@@ -72,11 +92,30 @@ export default async function BlogsIndexPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {blogs.map((blog) => (
-              <BlogListItem key={blog.slug} blog={blog} />
-            ))}
-          </div>
+          <>
+            <div className="space-y-4">
+              {displayedBlogs.map((blog) => (
+                <BlogListItem key={blog.slug} blog={blog} />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => setDisplayCount(displayCount + 10)}
+                  className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-md transition-colors"
+                >
+                  Load More Blogs ({blogs.length - displayCount} remaining)
+                </button>
+              </div>
+            )}
+
+            {!hasMore && blogs.length > 10 && (
+              <div className="mt-8 text-center">
+                <p className="text-gray-400 text-sm">Showing all {blogs.length} blog posts</p>
+              </div>
+            )}
+          </>
         )}
 
         <div className="mt-20">

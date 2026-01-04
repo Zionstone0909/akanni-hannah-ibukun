@@ -20,24 +20,23 @@ export default function BlogListItem({ blog, isHome }: BlogListItemProps) {
 
   // --- 🔑 CRITICAL CORRECTIONS for TypeError and Type Safety ---
 
-  // 1. Safely extract the title: Use optional chaining to guard against 'blog.title' being undefined.
-  // Use nullish coalescing ('??') to default to an empty string if 'rendered' is missing.
-  const rawTitle = blog.title?.rendered ?? "";
-  const title = stripHtmlAndDecode(rawTitle);
+	// 1. Safely extract the title: support both WordPress-style ({ rendered }) and plain string.
+	const rawTitle = typeof blog.title === "string"
+		? blog.title
+		: (blog.title?.rendered ?? "");
+	const title = stripHtmlAndDecode(rawTitle);
 
   // 2. Safely extract the excerpt:
   // - Check if 'blog.excerpt' exists AND 'blog.excerpt.rendered' exists.
   // - If not, fall back to 'blog.content.rendered'.
   // - Use nullish coalescing ('??') to default to an empty string if everything is missing.
-  const rawExcerpt = 
-    blog.excerpt?.rendered 
-      ? blog.excerpt.rendered 
-      : (blog.content?.rendered ?? ""); // Use optional chaining on content too!
-  
-  // Since the excerpt is being rendered using dangerouslySetInnerHTML, 
-  // we DO NOT strip HTML from the excerpt, but we must ensure it's a string.
-  // We only use stripHtmlAndDecode on the title, which should be plain text.
-  const excerpt = rawExcerpt; 
+	// 2. Safely extract the excerpt/content HTML. Support both string and { rendered } shapes.
+	const excerptHtml = typeof blog.excerpt === "string"
+		? blog.excerpt
+		: (blog.excerpt?.rendered ?? (typeof blog.content === "string" ? blog.content : (blog.content?.rendered ?? "")));
+
+	// Use the prepared HTML string for rendering via dangerouslySetInnerHTML
+	const excerpt = excerptHtml;
 
   // -----------------------------------------------------------------
 

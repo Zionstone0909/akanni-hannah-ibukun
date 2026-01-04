@@ -42,7 +42,8 @@ const getHighlighter = cache(async () => {
 
 // Generate metadata for the specific blog post
 export async function generateMetadata({ params }: TProps): Promise<Metadata> {
-  const blog = getBlogData(params.slug);
+  const { slug } = await params;
+  const blog = getBlogData(slug);
 
   if (!blog) {
     return {
@@ -101,7 +102,8 @@ const highlightCodeBlocks = async (htmlContent: string): Promise<string> => {
 
 // Main Page component (an async Server Component)
 export default async function BlogPage({ params }: TProps) {
-  const blog = getBlogData(params.slug);
+  const { slug } = await params;
+  const blog = getBlogData(slug);
   if (!blog) notFound(); // Show 404 if the blog post doesn't exist
 
   // Process the static HTML string for syntax highlighting

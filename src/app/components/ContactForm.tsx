@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SectionLabel from "./SectionLabel";
-import { sendMail } from "../utils/sendMail";
+// Use server API route instead of calling server code from client
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -30,6 +30,7 @@ const formSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email address.",
     }),
+    projectType: z.string().min(2).optional(),
     message: z.string().min(10, {
         message: "Message must be at least 10 characters.",
     }),
@@ -42,6 +43,7 @@ export default function ContactForm() {
         defaultValues: {
             name: "",
             email: "",
+            projectType: "",
             message: "",
         },
     });
@@ -53,11 +55,12 @@ export default function ContactForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true);
-        const response = await sendMail(
-            values.name,
-            values.email,
-            values.message
-        );
+        const res = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(values),
+        });
+        const response = await res.json();
         setIsLoading(false);
 
             if (response && response.success) {
@@ -97,7 +100,10 @@ export default function ContactForm() {
             className="lg:pl-6 w-full"
         >
             <section className="w-full text-sm" id="contact">
-                <SectionLabel label="CONTACT" />
+                <div className="flex items-center justify-between">
+                    <SectionLabel label="CONTACT" />
+                    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-300 hover:text-orange-500">Download Resume</a>
+                </div>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -133,6 +139,23 @@ export default function ContactForm() {
                                     <FormControl>
                                         <Input
                                             placeholder="hannahakanni7@gmail.com"
+                                            {...field}
+                                            className="bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.1)] text-white text-xs p-2 rounded-sm focus:ring-orange-500"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-xs" />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="projectType"
+                            render={({ field }) => (
+                                <FormItem className="col-span-2 md:col-span-1">
+                                    <FormLabel className="text-slate-100 text-xs">Project Type</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Website, Mobile App, UI/UX, eCommerce, etc."
                                             {...field}
                                             className="bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.1)] text-white text-xs p-2 rounded-sm focus:ring-orange-500"
                                         />
