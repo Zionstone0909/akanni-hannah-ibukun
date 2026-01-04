@@ -25,8 +25,7 @@ interface HomeProps {
 }
 
 // Accept the 'blogs' prop here
-export default function Home() {
-    const blogs = allBlogs;
+export default function Home({ blogs }: HomeProps) {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Person",
